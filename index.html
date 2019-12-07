@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="/style/pagination.css">
+    <link rel="stylesheet" href="/style/style.css">
+</head>
+
+<body>
+
+    <div class="main">
+        <label class="form__label" for="name">Search a movie</label>
+        <input class="form__input" type="text" name="name" id="name">
+
+        <select id="select" class="form__select" name="type">
+            <option class="form__select-option" value="movie">movie</option>
+            <option class="form__select-option" value="series">series</option>
+            <option class="form__select-option" value="episode">episode</option>
+        </select>
+
+        <input id="submit" class="form__submit" type="submit">
+
+    </div>
+
+    <div id="root"></div>
+
+    <div id="data-container"></div>
+    <div id="pagination-container"></div>
+
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
+    <script src="/script/pagination.js"></script>
+    <script src="/script/script.js"></script>
+</body>
+
+</html>

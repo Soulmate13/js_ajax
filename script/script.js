@@ -18,6 +18,11 @@ let name = document.getElementById("name");
 let select = document.getElementById("select");
 let submit = document.getElementById("submit");
 let total;
+let page = 1;
+let btn = document.createElement("button");
+btn.innerText = "Next Page"
+let btnLast = document.createElement("button");
+btnLast.innerText = "Last Page"
 
 let ul = document.createElement("ul");
 document.getElementById("root").appendChild(ul);
@@ -35,12 +40,13 @@ function FetchFilm() {
             obj = myJson;
 
             for (let i = 0; i < obj.Search.length; i++) {
-                buff += `<li>${obj.Search[i].Title} (${obj.Search[i].Year})</li>`
+                buff += `<li>${obj.Search[i].Title} (${obj.Search[i].Year})</li> <button id = 'info'>Show info</button>`
             }
 
             ul.innerHTML = `${buff}`
-            total = parseInt(obj.totalResults, 10);
 
+            document.getElementById("root").appendChild(btnLast);
+            document.getElementById("root").appendChild(btn);
         })
         .catch(function (error) {
             console.log("ERROR!");
@@ -49,15 +55,61 @@ function FetchFilm() {
         });
 
 
+    btn.addEventListener('click', NextPage);
+    btnLast.addEventListener('click', LastPage);
 
-    // $('#pagination-container').pagination({
-    //     dataSource: [1, 2, 3, 4, 5, 6, 7195],
-    //     callback: function (data, pagination) {
-    //         // template method of yourself
-    //         var html = template(data);
-    //         $('#data-container').html(html);
-    //     }
-    // })
+}
 
+
+
+
+function NextPage() {
+    let url = `http://www.omdbapi.com/?s=${name.value}&type=${select.value}&page=${page + 1}&apikey=c19ba406`
+    page += 1
+    let buff = ``;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(myJson => {
+            obj = myJson;
+
+            for (let i = 0; i < obj.Search.length; i++) {
+                buff += `<li>${obj.Search[i].Title} (${obj.Search[i].Year})</li> <button>Show info</button>`
+            }
+
+            ul.innerHTML = `${buff}`
+
+        })
+        .catch(function (error) {
+            console.log("ERROR!");
+            console.error(error);
+            root.innerText = "ERROR! 404! MOVIE NOT FOUND!"
+        });
+
+}
+
+function LastPage() {
+    let url = `http://www.omdbapi.com/?s=${name.value}&type=${select.value}&page=${page - 1}&apikey=c19ba406`
+    page -= 1;
+    let buff = ``;
+
+    fetch(url)
+        .then(response => response.json())
+        .then(myJson => {
+            obj = myJson;
+
+            for (let i = 0; i < obj.Search.length; i++) {
+                buff += `<li>${obj.Search[i].Title} (${obj.Search[i].Year})</li> <button>Show info</button>`
+            }
+
+            ul.innerHTML = `${buff}`
+
+
+        })
+        .catch(function (error) {
+            console.log("ERROR!");
+            console.error(error);
+            root.innerText = "ERROR! 404! MOVIE NOT FOUND!"
+        });
 }
 

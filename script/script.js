@@ -13,74 +13,71 @@
 // Ссылка на альтернативный API с фильмами (для того случая, если OMDB не будет работать): https://developers.themoviedb.org/3/ search/search-movies.
 // Если же и этот API не будет работать, вам придется сам остоятельно найти другой доступный ресурс и адаптировать под него задание.
 
-let obj = {};
-let name = document.getElementById("name");
+//getting the form elements
+let input = document.getElementById("name");
 let select = document.getElementById("select");
 let submit = document.getElementById("submit");
-let total;
-let page = 1;
+
+//adding the event listener for the main search button
+submit.addEventListener('click', function () {
+    ClearPage();
+    FetchFilm(input.value, select.value, page, 0);
+});
+
+//creating the next and last buttons to be appended later
 let btn = document.createElement("button");
 btn.innerText = "Next Page"
 let btnLast = document.createElement("button");
 btnLast.innerText = "Last Page"
 
+//adding event listeners to these buttons
+btn.addEventListener('click', function () { FetchFilm(input.value, select.value, page, 1); });
+btnLast.addEventListener('click', function () { FetchFilm(input.value, select.value, page, -1); });
+
+//setting the page to 1
+let page = 1;
+
+//appending the ul to the root
 let ul = document.createElement("ul");
 document.getElementById("root").appendChild(ul);
 
-submit.addEventListener('click', FetchFilm);
+// creating the function to fetch films which takes 4 arguments
+function FetchFilm(_name, _type, _page, _increment) {
+    _page = _page + _increment; // page should increase or decrease if we use next or last buttons
+    page = _page; //also updating the global variable
 
-function FetchFilm() {
-    let url = `http://www.omdbapi.com/?s=${name.value}&type=${select.value}&apikey=c19ba406`
+    let url = `http://www.omdbapi.com/?s=${_name}&type=${_type}&page=${_page}&apikey=c19ba406` // forming a url
 
-    let buff = ``;
-
-    fetch(url)
-        .then(response => response.json())
-        .then(myJson => {
-            obj = myJson;
-
-            for (let i = 0; i < obj.Search.length; i++) {
-                buff += `<li>${obj.Search[i].Title} (${obj.Search[i].Year})</li> <button id = 'info'>Show info</button>`
-            }
-
-            ul.innerHTML = `${buff}`
-
-            document.getElementById("root").appendChild(btnLast);
-            document.getElementById("root").appendChild(btn);
-        })
-        .catch(function (error) {
-            console.log("ERROR!");
-            console.error(error);
-            root.innerText = "ERROR! 404! MOVIE NOT FOUND!"
-        });
-
-
-    btn.addEventListener('click', NextPage);
-    btnLast.addEventListener('click', LastPage);
-
-}
-
-
-
-
-function NextPage() {
-    let url = `http://www.omdbapi.com/?s=${name.value}&type=${select.value}&page=${page + 1}&apikey=c19ba406`
-    page += 1
-    let buff = ``;
+    let buff = ``; // forming a buffer for li's
 
     fetch(url)
         .then(response => response.json())
         .then(myJson => {
             obj = myJson;
 
-            for (let i = 0; i < obj.Search.length; i++) {
-                buff += `<li>${obj.Search[i].Title} (${obj.Search[i].Year})</li> <button>Show info</button>`
+            for (let i = 0; i < obj.Search.length; i++) { // each li has an image of the poster and two paras with title and year
+                buff += `<li><img src="${obj.Search[i].Poster}" onerror="imgError(this);"/><p>${obj.Search[i].Title}</p><p>(${obj.Search[i].Year})</p><button>Show info</button></li> `
             }
 
-            ul.innerHTML = `${buff}`
+            ul.innerHTML = `${buff}` // adding the buffer
+
+            document.getElementById("table").appendChild(btnLast); // finally adding the buttons
+            document.getElementById("table").appendChild(btn);
+
+            if (_page == 1) { // the prev button should not work on the first page
+                btnLast.disabled = true;
+            } else {
+                btnLast.disabled = false;
+            };
+
+            if (_page >= (parseInt(obj.totalResults) / 10)) { // the next button should not work on the last page
+                btn.disabled = true;
+            } else {
+                btn.disabled = false;
+            }
 
         })
-        .catch(function (error) {
+        .catch(function (error) { //cathing errors and writing error message
             console.log("ERROR!");
             console.error(error);
             root.innerText = "ERROR! 404! MOVIE NOT FOUND!"
@@ -88,28 +85,13 @@ function NextPage() {
 
 }
 
-function LastPage() {
-    let url = `http://www.omdbapi.com/?s=${name.value}&type=${select.value}&page=${page - 1}&apikey=c19ba406`
-    page -= 1;
-    let buff = ``;
-
-    fetch(url)
-        .then(response => response.json())
-        .then(myJson => {
-            obj = myJson;
-
-            for (let i = 0; i < obj.Search.length; i++) {
-                buff += `<li>${obj.Search[i].Title} (${obj.Search[i].Year})</li> <button>Show info</button>`
-            }
-
-            ul.innerHTML = `${buff}`
-
-
-        })
-        .catch(function (error) {
-            console.log("ERROR!");
-            console.error(error);
-            root.innerText = "ERROR! 404! MOVIE NOT FOUND!"
-        });
+function ClearPage() { // each new search should start from the first page
+    page = 1;
 }
 
+
+function imgError(image) { // backup image for posters in case the links to them are broken
+    image.onerror = "";
+    image.src = "/img/error.png";
+    return true;
+}

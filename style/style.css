@@ -1,0 +1,137 @@
+body {
+    background-image: url(/img/background.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    
+}
+
+.page {
+    max-width: 1920px;
+    display: flex;
+    flex-direction: column;
+    font-family: 'Roboto', sans-serif;
+    color: white;
+    
+}
+
+.main {
+    margin: 10px auto;
+    padding: 5px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 500px;
+    width: 100%;
+}
+
+.form__label {
+    text-transform: uppercase;
+    font-size: 25px;
+    margin-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+    color: #fff;
+}
+
+.form__label a {
+    text-decoration: none;
+    color: #fff;
+}
+
+.form__label a:visited {
+    color: #fff;
+}
+
+.form__label a:hover {
+    color: #f4f4f4;
+}
+
+.form__input {
+    border: 2px solid #fff;
+    width: 100%;
+    padding: 5px;
+    margin-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+}
+
+
+.form__select {
+    width: 50%;
+    margin-bottom: 10px;
+    font-family: 'Roboto', sans-serif;
+
+}
+
+
+.form__submit {
+    border: 2px solid black;
+    padding: 10px 20px;
+    color: black;
+    background-color: #fff;
+    font-family: 'Roboto', sans-serif;
+}
+.form__select:focus, .form__input:focus, .form__submit:focus  {
+    outline: none;
+    background-color: #f4f4f4;
+
+}
+
+.form__submit:hover {
+    background-color: #f4f4f4;
+    cursor: pointer;
+}
+
+li {
+    box-sizing: border-box;
+    width: 24%;
+    display: inline-block;
+    text-align: center;
+    margin: 10px auto;
+    padding: 0 10px;
+    background-color: rgba(244, 244, 244, 0.8)
+}
+
+li:hover {
+    background-color: rgba(244, 244, 244, 1)
+}
+
+.error {
+    color: white;
+    text-align: center;
+    font-size: 20px;
+}
+
+#root {
+    margin-top: 20px;
+    text-align: center;
+}
+
+li p {
+    margin: 0 auto;
+    padding: 0 0;
+    color: black !important;
+}
+
+li button {
+    display: block;
+    margin: 10px auto;
+}
+
+li img {
+    height: 500px;
+    display: block;
+    margin: 10px auto;
+}
+
+button {
+   padding: 10px; 
+   cursor: pointer;
+}
+
+#table {
+    margin: 0 auto;
+}
+
+#root button {
+    text-align: center;
+}
+

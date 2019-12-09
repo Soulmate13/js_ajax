@@ -46,7 +46,7 @@ function FetchFilm(_name, _type, _page, _increment) {
     _page = _page + _increment; // page should increase or decrease if we use next or last buttons
     page = _page; //also updating the global variable
 
-    let url = `http://www.omdbapi.com/?s=${_name}&type=${_type}&page=${_page}&apikey=c19ba406` // forming a url
+    let url = `http://www.omdbapi.com/?s=${_name}&type=${_type}&page=${_page}&apikey=c19ba406`; // forming a url
 
     let buff = ``; // forming a buffer for li's
 
@@ -80,7 +80,7 @@ function FetchFilm(_name, _type, _page, _increment) {
         .catch(function (error) { //cathing errors and writing error message
             console.log("ERROR!");
             console.error(error);
-            root.innerText = "ERROR! 404! MOVIE NOT FOUND!"
+            root.innerText = "ERROR! 404! MOVIE NOT FOUND!";
         });
 
 }

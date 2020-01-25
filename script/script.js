@@ -81,7 +81,7 @@ function FetchFilm(_name, _type, _page, _increment) {
                 infobtn.innerText = "Show info"
                 infobtn.setAttribute('data-remodal-target', 'modal')
                 infobtn.classList.add("btn-more")
-                infobtn.addEventListener('click', function () { getInfo(obj.Search[i].Title) })
+                infobtn.addEventListener('click', function () { getInfo(obj.Search[i].imdbID) })
                 wrapper.appendChild(element);
                 let fav = document.createElement('a');
                 fav.classList.add("btn-more")
@@ -121,9 +121,9 @@ function FetchFilm(_name, _type, _page, _increment) {
 }
 
 
-function getInfo(_title) {
+function getInfo(_id) {
 
-    fetch(`https://www.omdbapi.com/?t=${_title}&plot=full&apikey=c19ba406`)
+    fetch(`https://www.omdbapi.com/?i=${_id}&plot=full&apikey=c19ba406`)
         .then(response => response.json())
         .then(myJson => {
             object = myJson;
@@ -132,7 +132,7 @@ function getInfo(_title) {
             document.getElementById(`heading`).innerHTML = `${object.Title}`
             document.getElementById(`year`).innerHTML = `${object.Year}`
             document.getElementById(`image`).setAttribute('src', `${object.Poster}`)
-            document.getElementById('image').setAttribute('onerror', 'imgError(this)')
+            document.getElementById('image').setAttribute("onerror", 'imgError(this)')
         })
 
 }
@@ -145,10 +145,5 @@ function ClearPage() { // each new search should start from the first page
 
 function imgError(image) { // backup image for posters in case the links to them are broken
     image.onerror = "";
-    image.src = "./img/error.png";
+    image.src = "../img/error.png";
 }
-
-$("i").click(function (event) {
-    event.target.toggleClass('fas')
-    event.target.toggleClass('far')
-})

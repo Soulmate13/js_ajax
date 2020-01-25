@@ -115,7 +115,8 @@ function FetchFilm(_name, _type, _page, _increment) {
         .catch(function (error) { //cathing errors and writing error message
             console.log("ERROR!");
             console.error(error);
-            root.innerText = "ERROR! 404! MOVIE NOT FOUND!";
+            let inst = $('[data-remodal-id=modal-error]').remodal();
+            inst.open();
         });
 
 }

@@ -64,10 +64,12 @@ function FetchFilm(_name, _type, _page, _increment) {
                 p1.innerText = `${obj.Search[i].Title}`
                 let p2 = document.createElement('p')
                 p2.innerText = `${obj.Search[i].Year}`
-                let infobtn = document.createElement('button')
-                infobtn.innerText = "More info"
+                let infobtn = document.createElement('a')
+                infobtn.innerText = "Show info"
+                infobtn.setAttribute('data-remodal-target', 'modal')
                 infobtn.addEventListener('click', function () { getInfo(obj.Search[i].Title) })
                 let p3 = document.createElement('p')
+                p3.setAttribute('id', `${obj.Search[i].imdbID}`)
                 ul.appendChild(li);
                 li.appendChild(img)
                 li.appendChild(p1)
@@ -104,12 +106,15 @@ function FetchFilm(_name, _type, _page, _increment) {
 function getInfo(_title) {
 
     fetch(`http://www.omdbapi.com/?t=${_title}&plot=short&apikey=c19ba406`)
+        .then(response => response.json())
         .then(myJson => {
             object = myJson;
             console.log(myJson)
+            document.getElementById(`plot-para`).innerHTML = `${object.Plot}`
         })
 
 }
+
 
 function ClearPage() { // each new search should start from the first page
     page = 1;

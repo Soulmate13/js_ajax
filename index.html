@@ -7,6 +7,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style/remodal.css">
+    <link rel="stylesheet" href="./style/remodal-default-theme.css">
     <link rel="stylesheet" href="./style/style.css">
 </head>
 
@@ -29,10 +31,26 @@
 
         <div id="table"></div>
         <div id="root"></div>
+        <div class="remodal-bg">
+            <div class="remodal" data-remodal-id="modal">
+                <button data-remodal-action="close" class="remodal-close"></button>
+                <h1>Remodal</h1>
+                <p id="plot-para">
+                    Responsive, lightweight, fast, synchronized with CSS animations, fully customizable modal window
+                    plugin
+                    with declarative configuration and hash tracking.
+                </p>
+                <br>
+                <button data-remodal-action="cancel" class="remodal-cancel">Cancel</button>
+                <button data-remodal-action="confirm" class="remodal-confirm">OK</button>
+            </div>
+        </div>
+
 
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
+    <script src="./script/remodal.min.js"></script>
     <script src="./script/script.js"></script>
 </body>
 

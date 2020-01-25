@@ -46,7 +46,7 @@ function FetchFilm(_name, _type, _page, _increment) {
     _page = _page + _increment; // page should increase or decrease if we use next or last buttons
     page = _page; //also updating the global variable
 
-    let url = `http://www.omdbapi.com/?s=${_name}&type=${_type}&page=${_page}&apikey=c19ba406`; // forming a url
+    let url = `https://www.omdbapi.com/?s=${_name}&type=${_type}&page=${_page}&apikey=c19ba406`; // forming a url
 
 
     fetch(url)
@@ -105,12 +105,15 @@ function FetchFilm(_name, _type, _page, _increment) {
 
 function getInfo(_title) {
 
-    fetch(`http://www.omdbapi.com/?t=${_title}&plot=short&apikey=c19ba406`)
+    fetch(`https://www.omdbapi.com/?t=${_title}&plot=full&apikey=c19ba406`)
         .then(response => response.json())
         .then(myJson => {
             object = myJson;
             console.log(myJson)
             document.getElementById(`plot-para`).innerHTML = `${object.Plot}`
+            document.getElementById(`heading`).innerHTML = `${object.Title}`
+            document.getElementById(`year`).innerHTML = `${object.Year}`
+            document.getElementById(`image`).setAttribute('src', `${object.Poster}`)
         })
 
 }

@@ -145,7 +145,7 @@ function ClearPage() { // each new search should start from the first page
 
 function imgError(image) { // backup image for posters in case the links to them are broken
     image.onerror = "";
-    image.src = "/img/error.png";
+    image.src = "./img/error.png";
 }
 
 $("i").click(function (event) {

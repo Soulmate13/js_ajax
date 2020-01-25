@@ -18,6 +18,14 @@ let input = document.getElementById("name");
 let select = document.getElementById("select");
 let submit = document.getElementById("submit");
 
+input.addEventListener("keyup", function () {
+    if (event.keyCode === 13) {
+        event.preventDefault();
+        ClearPage();
+        FetchFilm(input.value, select.value, page, 0);
+    }
+});
+
 //adding the event listener for the main search button
 submit.addEventListener('click', function () {
     ClearPage();
@@ -38,8 +46,9 @@ btnLast.addEventListener('click', function () { FetchFilm(input.value, select.va
 let page = 1;
 
 //appending the ul to the root
-let ul = document.createElement("ul");
-document.getElementById("root").appendChild(ul);
+let wrapper = document.createElement("div");
+wrapper.setAttribute('id', 'wrapper');
+document.getElementById("root").appendChild(wrapper);
 
 // creating the function to fetch films which takes 4 arguments
 function FetchFilm(_name, _type, _page, _increment) {
@@ -54,28 +63,37 @@ function FetchFilm(_name, _type, _page, _increment) {
         .then(myJson => {
             obj = myJson;
             console.log(myJson)
-            ul.innerHTML = ''
+            wrapper.innerHTML = ''
             for (let i = 0; i < obj.Search.length; i++) { // each li has an image of the poster and two paras with title and year
-                let li = document.createElement('li');
-                let img = document.createElement('img')
+                let element = document.createElement('div');
+                element.classList.add("element");
+                let inner = document.createElement('div');
+                inner.classList.add("inner");
+                let img = document.createElement('img');
                 img.setAttribute("src", `${obj.Search[i].Poster}`)
                 img.setAttribute("onerror", 'imgError(this)')
                 let p1 = document.createElement('p')
+                p1.classList.add('movie_title')
                 p1.innerText = `${obj.Search[i].Title}`
                 let p2 = document.createElement('p')
                 p2.innerText = `${obj.Search[i].Year}`
                 let infobtn = document.createElement('a')
                 infobtn.innerText = "Show info"
                 infobtn.setAttribute('data-remodal-target', 'modal')
+                infobtn.classList.add("btn-more")
                 infobtn.addEventListener('click', function () { getInfo(obj.Search[i].Title) })
-                let p3 = document.createElement('p')
-                p3.setAttribute('id', `${obj.Search[i].imdbID}`)
-                ul.appendChild(li);
-                li.appendChild(img)
-                li.appendChild(p1)
-                li.appendChild(p2)
-                li.appendChild(p3)
-                li.appendChild(infobtn)
+                wrapper.appendChild(element);
+                let fav = document.createElement('a');
+                fav.classList.add("btn-more")
+                fav.classList.add("btn-fav")
+                fav.innerText = "Add to favourites"
+                element.appendChild(inner)
+                inner.appendChild(img)
+                element.appendChild(p1)
+                element.appendChild(p2)
+                element.appendChild(infobtn)
+                element.appendChild(document.createElement('br'))
+                element.appendChild(fav)
             }
 
             document.getElementById("table").appendChild(btnLast); // finally adding the buttons
@@ -114,6 +132,7 @@ function getInfo(_title) {
             document.getElementById(`heading`).innerHTML = `${object.Title}`
             document.getElementById(`year`).innerHTML = `${object.Year}`
             document.getElementById(`image`).setAttribute('src', `${object.Poster}`)
+            document.getElementById('image').setAttribute('onerror', 'imgError(this)')
         })
 
 }
@@ -127,5 +146,9 @@ function ClearPage() { // each new search should start from the first page
 function imgError(image) { // backup image for posters in case the links to them are broken
     image.onerror = "";
     image.src = "/img/error.png";
-    return true;
 }
+
+$("i").click(function (event) {
+    event.target.toggleClass('fas')
+    event.target.toggleClass('far')
+})

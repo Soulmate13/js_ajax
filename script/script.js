@@ -48,18 +48,33 @@ function FetchFilm(_name, _type, _page, _increment) {
 
     let url = `http://www.omdbapi.com/?s=${_name}&type=${_type}&page=${_page}&apikey=c19ba406`; // forming a url
 
-    let buff = ``; // forming a buffer for li's
 
     fetch(url)
         .then(response => response.json())
         .then(myJson => {
             obj = myJson;
-
+            console.log(myJson)
+            ul.innerHTML = ''
             for (let i = 0; i < obj.Search.length; i++) { // each li has an image of the poster and two paras with title and year
-                buff += `<li><img src="${obj.Search[i].Poster}" onerror="imgError(this);"/><p>${obj.Search[i].Title}</p><p>(${obj.Search[i].Year})</p><button>Show info</button></li> `
+                let li = document.createElement('li');
+                let img = document.createElement('img')
+                img.setAttribute("src", `${obj.Search[i].Poster}`)
+                img.setAttribute("onerror", 'imgError(this)')
+                let p1 = document.createElement('p')
+                p1.innerText = `${obj.Search[i].Title}`
+                let p2 = document.createElement('p')
+                p2.innerText = `${obj.Search[i].Year}`
+                let infobtn = document.createElement('button')
+                infobtn.innerText = "More info"
+                infobtn.addEventListener('click', function () { getInfo(obj.Search[i].Title) })
+                let p3 = document.createElement('p')
+                ul.appendChild(li);
+                li.appendChild(img)
+                li.appendChild(p1)
+                li.appendChild(p2)
+                li.appendChild(p3)
+                li.appendChild(infobtn)
             }
-
-            ul.innerHTML = `${buff}` // adding the buffer
 
             document.getElementById("table").appendChild(btnLast); // finally adding the buttons
             document.getElementById("table").appendChild(btn);
@@ -82,6 +97,17 @@ function FetchFilm(_name, _type, _page, _increment) {
             console.error(error);
             root.innerText = "ERROR! 404! MOVIE NOT FOUND!";
         });
+
+}
+
+
+function getInfo(_title) {
+
+    fetch(`http://www.omdbapi.com/?t=${_title}&plot=short&apikey=c19ba406`)
+        .then(myJson => {
+            object = myJson;
+            console.log(myJson)
+        })
 
 }
 

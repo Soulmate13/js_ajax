@@ -117,6 +117,7 @@ function FetchFilm(_name, _type, _page, _increment) {
             console.error(error);
             let inst = $('[data-remodal-id=modal-error]').remodal();
             inst.open();
+            document.getElementById('table').innerHTML = ''
         });
 
 }

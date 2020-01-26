@@ -15,7 +15,10 @@
 <body>
 
     <div class="page">
-        <div class="main">
+
+        <a href="./#favourite-list" class="favourite-list"></a>
+
+        <div class="menu">
             <label class="form__label" for="name"><a href="#">Search a movie or series</a></label>
             <input class="form__input" type="text" name="name" id="name" placeholder="Star Wars">
 
@@ -23,13 +26,12 @@
                 <option class="form__select-option" value="movie">movie</option>
                 <option class="form__select-option" value="series">series</option>
             </select>
-
             <input id="submit" class="form__submit" type="submit" value="SEARCH">
 
         </div>
 
-        <div id="table"></div>
-        <div id="root"></div>
+        <div id="nav"></div>
+        <div id="panel"></div>
         <div class="remodal-bg">
             <div class="remodal" data-remodal-id="modal">
                 <button data-remodal-action="close" class="remodal-close"></button>
@@ -39,17 +41,15 @@
                 <p id="plot-para">
                 </p>
                 <br>
-
             </div>
         </div>
 
         <div class="remodal-bg">
             <div class="remodal" data-remodal-id="modal-error">
-                <p>ERROR! MOVIE NOT FOUND</p>
+                <p class="error-message">ERROR! MOVIE NOT FOUND</p>
                 <button data-remodal-action="confirm" class="remodal-confirm">OK</button>
             </div>
         </div>
-
 
     </div>
 

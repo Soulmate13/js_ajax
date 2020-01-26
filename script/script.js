@@ -45,10 +45,10 @@ btnLast.addEventListener('click', function () { FetchFilm(input.value, select.va
 //setting the page to 1
 let page = 1;
 
-//appending the ul to the root
+//appending the wrapper to the panel
 let wrapper = document.createElement("div");
 wrapper.setAttribute('id', 'wrapper');
-document.getElementById("root").appendChild(wrapper);
+document.getElementById("panel").appendChild(wrapper);
 
 // creating the function to fetch films which takes 4 arguments
 function FetchFilm(_name, _type, _page, _increment) {
@@ -57,47 +57,53 @@ function FetchFilm(_name, _type, _page, _increment) {
 
     let url = `https://www.omdbapi.com/?s=${_name}&type=${_type}&page=${_page}&apikey=c19ba406`; // forming a url
 
-
     fetch(url)
         .then(response => response.json())
         .then(myJson => {
             obj = myJson;
             console.log(myJson)
-            wrapper.innerHTML = ''
-            for (let i = 0; i < obj.Search.length; i++) { // each li has an image of the poster and two paras with title and year
-                let element = document.createElement('div');
+            wrapper.innerHTML = '' // clearing the wrapper
+            for (let i = 0; i < obj.Search.length; i++) { // each element has an image of the poster and two paras with title, year and two buttons
+                let element = document.createElement('div'); // base element which contains each film
                 element.classList.add("element");
-                let inner = document.createElement('div');
+
+                let inner = document.createElement('div'); // inner contains image
                 inner.classList.add("inner");
-                let img = document.createElement('img');
+                let img = document.createElement('img'); // poster image
                 img.setAttribute("src", `${obj.Search[i].Poster}`)
                 img.setAttribute("onerror", 'imgError(this)')
-                let p1 = document.createElement('p')
+                inner.appendChild(img) // we place image inside inner
+
+                let p1 = document.createElement('p') //paragraphs for title and year
                 p1.classList.add('movie_title')
                 p1.innerText = `${obj.Search[i].Title}`
                 let p2 = document.createElement('p')
                 p2.innerText = `${obj.Search[i].Year}`
-                let infobtn = document.createElement('a')
+
+                let infobtn = document.createElement('a') // info button
                 infobtn.innerText = "Show info"
                 infobtn.setAttribute('data-remodal-target', 'modal')
                 infobtn.classList.add("btn-more")
                 infobtn.addEventListener('click', function () { getInfo(obj.Search[i].imdbID) })
-                wrapper.appendChild(element);
-                let fav = document.createElement('a');
+
+                let fav = document.createElement('a'); // favourite button
                 fav.classList.add("btn-more")
                 fav.classList.add("btn-fav")
                 fav.innerText = "Add to favourites"
-                element.appendChild(inner)
-                inner.appendChild(img)
+                fav.addEventListener('click', function () { saveId(obj.Search[i].imdbID) })
+
+                element.appendChild(inner) // appending everything to the element
                 element.appendChild(p1)
                 element.appendChild(p2)
                 element.appendChild(infobtn)
                 element.appendChild(document.createElement('br'))
                 element.appendChild(fav)
+
+                wrapper.appendChild(element); // each elment goes inside wrapper
             }
 
-            document.getElementById("table").appendChild(btnLast); // finally adding the buttons
-            document.getElementById("table").appendChild(btn);
+            document.getElementById("nav").appendChild(btnLast); // finally adding the nav buttons
+            document.getElementById("nav").appendChild(btn);
 
             if (_page == 1) { // the prev button should not work on the first page
                 btnLast.disabled = true;
@@ -122,28 +128,56 @@ function FetchFilm(_name, _type, _page, _increment) {
 
 }
 
-
 function getInfo(_id) {
-
     fetch(`https://www.omdbapi.com/?i=${_id}&plot=full&apikey=c19ba406`)
         .then(response => response.json())
         .then(myJson => {
             object = myJson;
             console.log(myJson)
-            document.getElementById(`plot-para`).innerHTML = `${object.Plot}`
-            document.getElementById(`heading`).innerHTML = `${object.Title}`
-            document.getElementById(`year`).innerHTML = `${object.Year}`
-            document.getElementById(`image`).setAttribute('src', `${object.Poster}`)
-            document.getElementById('image').setAttribute("onerror", 'imgError(this)')
+            document.getElementById(`plot-para`).innerHTML = `${object.Plot}` // modal should have plot
+            document.getElementById(`heading`).innerHTML = `${object.Title}` // title
+            document.getElementById(`year`).innerHTML = `${object.Year}` //year
+            document.getElementById(`image`).setAttribute('src', `${object.Poster}`) // poster
+            document.getElementById('image').setAttribute("onerror", 'imgError(this)') // error image should appear if the correct one is not loaded
         })
 
 }
+let films = JSON.parse(localStorage.films || '[]');
+console.log(localStorage.getItem("films"))
 
+function saveId(_id) {
+    let present = false;
+    let arrayindex = ''
+
+    for (let i = 0; i < films.length; i++) {
+
+        if (_id == films[i].id) {
+            present = true
+            arrayindex = i
+        }
+    }
+
+    if (present == false) {
+        films.push({ 'id': `${_id}` })
+        localStorage.setItem("films", JSON.stringify(films));
+        console.log(localStorage.getItem("films"))
+    }
+
+    if (present == true) {
+        console.log(arrayindex)
+        films.splice(arrayindex, 0)
+        console.log(films)
+        localStorage.setItem("films", JSON.stringify(films));
+        console.log(localStorage.getItem("films"))
+    }
+
+    present = false;
+    arrayindex = ''
+}
 
 function ClearPage() { // each new search should start from the first page
     page = 1;
 }
-
 
 function imgError(image) { // backup image for posters in case the links to them are broken
     image.onerror = "";

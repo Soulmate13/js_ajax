@@ -1,14 +1,8 @@
-.hidden {
-    display: none;
-}
-
 html {
     height: 100%;
 }
 
 body {
-    background-repeat: no-repeat;
-    background-size: cover;
     margin: 0;
     height: 100%;
     background-color: #F8F9F9;
@@ -24,7 +18,7 @@ body {
     height: 100%;
 }
 
-.main {
+.menu {
     margin: 10px auto;
     padding: 5px 0;
     display: flex;
@@ -32,12 +26,6 @@ body {
     align-items: center;
     max-width: 500px;
     text-align: center;
-}
-
-@media screen and (max-width: 360px) {
-    .form__input {
-        max-width: 300px;
-    }   
 }
 
 .form__label {
@@ -65,11 +53,16 @@ body {
     box-sizing: border-box;
 }
 
+@media screen and (max-width: 360px) {
+    .form__input {
+        max-width: 300px;
+    }   
+}
+
 .form__select {
     width: 50%;
     margin-bottom: 10px;
     font-family: 'Roboto', sans-serif;
-
 }
 
 .form__submit {
@@ -89,35 +82,13 @@ body {
     cursor: pointer;
 }
 
-
-
-.error {
-    color: white;
-    text-align: center;
-    font-size: 20px;
-}
-
-#root {
+#panel {
     margin-top: 20px;
     text-align: center;
 }
 
-
-button {
-   padding: 10px; 
-   cursor: pointer;
-}
-
-#table {
+#nav {
     margin: 0 auto;
-}
-
-#root button {
-    text-align: center;
-}
-
-a {
-    color: #000;
 }
 
 #wrapper {
@@ -126,9 +97,17 @@ a {
     grid-row-gap: 20px;
 }
 
-
 #wrapper img {
     max-width: 300px;
+}
+
+button {
+   padding: 10px; 
+   cursor: pointer;
+}
+
+a {
+    color: #000;
 }
 
 .btn-more {

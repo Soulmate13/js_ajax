@@ -14,6 +14,7 @@
 // Если же и этот API не будет работать, вам придется сам остоятельно найти другой доступный ресурс и адаптировать под него задание.
 
 //getting the form elements
+
 let input = document.getElementById("name");
 let select = document.getElementById("select");
 let submit = document.getElementById("submit");
@@ -63,6 +64,7 @@ function FetchFilm(_name, _type, _page, _increment) {
             obj = myJson;
             console.log(myJson)
             wrapper.innerHTML = '' // clearing the wrapper
+            document.getElementById('fav-list').innerHTML = '' // clearing favlist
             for (let i = 0; i < obj.Search.length; i++) { // each element has an image of the poster and two paras with title, year and two buttons
                 let element = document.createElement('div'); // base element which contains each film
                 element.classList.add("element");
@@ -143,7 +145,7 @@ function getInfo(_id) {
 
 }
 let films = JSON.parse(localStorage.films || '[]');
-console.log(localStorage.getItem("films"))
+console.log(films)
 
 function saveId(_id) {
     let present = false;
@@ -161,14 +163,14 @@ function saveId(_id) {
         films.push({ 'id': `${_id}` })
         localStorage.setItem("films", JSON.stringify(films));
         console.log(localStorage.getItem("films"))
+
     }
 
     if (present == true) {
-        console.log(arrayindex)
-        films.splice(arrayindex, 0)
-        console.log(films)
+        films.splice(arrayindex, 1)
         localStorage.setItem("films", JSON.stringify(films));
         console.log(localStorage.getItem("films"))
+
     }
 
     present = false;
@@ -182,4 +184,73 @@ function ClearPage() { // each new search should start from the first page
 function imgError(image) { // backup image for posters in case the links to them are broken
     image.onerror = "";
     image.src = "./img/error.png";
+}
+
+function ClearWrapper() {
+    wrapper.innerHTML = ''
+}
+
+function favouriteListBuild() {
+    wrapper.innerHTML = ''
+    document.getElementById('fav-list').innerHTML = ''
+
+    for (let i = 0; i < films.length; i++) {
+        fetch(`https://www.omdbapi.com/?i=${films[i].id}&plot=full&apikey=c19ba406`)
+            .then(response => response.json())
+            .then(myJson => {
+                object = myJson;
+                console.log(myJson)
+                let fav_element = document.createElement('div');
+                let fav_title = document.createElement('p')
+                fav_title.innerHTML = `${object.Title}`;
+                let fav_year = document.createElement('p')
+                fav_year.innerHTML = `${object.Year}`
+                let fav_img = document.createElement('img')
+                fav_img.setAttribute('src', `${object.Poster}`)
+                fav_img.setAttribute("onerror", 'imgError(this)')
+
+                let fav_btn = document.createElement('a'); // favourite button
+                fav_btn.classList.add("btn-more")
+                fav_btn.classList.add("btn-fav")
+                fav_btn.innerText = "Add to favourites"
+                fav_btn.addEventListener('click', function () { deleteId(object.imdbID) })
+
+                fav_element.appendChild(fav_img);
+                fav_element.appendChild(fav_title);
+                fav_element.appendChild(fav_year);
+                fav_element.appendChild(fav_btn);
+
+                document.getElementById('fav-list').appendChild(fav_element);
+
+                btn.disabled = true;
+                btnLast.disabled = true;
+
+                if (document.getElementById('fav-list').innerHTML == '') {
+                    document.getElementById('fav-list').innerText = "It is empty here. Add some movies to favourites"
+                }
+
+            })
+    }
+}
+
+document.getElementById('fav-call').addEventListener('click', function () {
+    favouriteListBuild();
+});
+
+function deleteId(_id) {
+    let arrayindex = ''
+
+    for (let i = 0; i < films.length; i++) {
+
+        if (_id == films[i].id) {
+            arrayindex = i
+        }
+    }
+
+    films.splice(arrayindex, 1)
+    localStorage.setItem("films", JSON.stringify(films));
+    console.log(localStorage.getItem("films"))
+
+    favouriteListBuild();
+    arrayindex = ''
 }

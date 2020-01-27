@@ -13,11 +13,8 @@
 </head>
 
 <body>
-
+    <button id="fav-call">Show favourite</button>
     <div class="page">
-
-        <a href="./#favourite-list" class="favourite-list"></a>
-
         <div class="menu">
             <label class="form__label" for="name"><a href="#">Search a movie or series</a></label>
             <input class="form__input" type="text" name="name" id="name" placeholder="Star Wars">
@@ -32,6 +29,8 @@
 
         <div id="nav"></div>
         <div id="panel"></div>
+        <div id="fav-list">
+        </div>
         <div class="remodal-bg">
             <div class="remodal" data-remodal-id="modal">
                 <button data-remodal-action="close" class="remodal-close"></button>
@@ -54,7 +53,6 @@
     </div>
 
     <script src="https://code.jquery.com/jquery-3.4.1.slim.js"></script>
-    <script src="https://kit.fontawesome.com/f811e9d5c2.js" crossorigin="anonymous"></script>
     <script src="./script/remodal.min.js"></script>
     <script src="./script/script.js"></script>
 </body>

@@ -62,7 +62,6 @@ function FetchFilm(_name, _type, _page, _increment) {
         .then(response => response.json())
         .then(myJson => {
             obj = myJson;
-            console.log(myJson)
             wrapper.innerHTML = '' // clearing the wrapper
             document.getElementById('fav-list').innerHTML = '' // clearing favlist
             for (let i = 0; i < obj.Search.length; i++) { // each element has an image of the poster and two paras with title, year and two buttons
@@ -84,15 +83,32 @@ function FetchFilm(_name, _type, _page, _increment) {
 
                 let infobtn = document.createElement('a') // info button
                 infobtn.innerText = "Show info"
-                infobtn.setAttribute('data-remodal-target', 'modal')
+                infobtn.setAttribute('data-remodal-target', 'modal') // that will be opening a modal window with info
                 infobtn.classList.add("btn-more")
                 infobtn.addEventListener('click', function () { getInfo(obj.Search[i].imdbID) })
 
                 let fav = document.createElement('a'); // favourite button
                 fav.classList.add("btn-more")
-                fav.classList.add("btn-fav")
-                fav.innerText = "Add to favourites"
-                fav.addEventListener('click', function () { saveId(obj.Search[i].imdbID) })
+
+                let liked = false;
+
+                for (let j = 0; j < films.length; j++) { // checking if the film is in the favourite section
+                    if (obj.Search[i].imdbID == films[j].id) {
+                        liked = true
+                    }
+                }
+
+                if (liked == true) { // if yes, we color the remove button red
+                    fav.innerText = 'Remove from favourites'
+                    fav.classList.add('btn-red')
+                    fav.classList.remove('btn-green')
+                } else { // if no, we color the remove button green
+                    fav.innerText = 'Add to favourites'
+                    fav.classList.add('btn-green')
+                    fav.classList.remove('btn-red')
+                }
+
+                fav.addEventListener('click', function () { saveId(obj.Search[i].imdbID, this) })
 
                 element.appendChild(inner) // appending everything to the element
                 element.appendChild(p1)
@@ -124,8 +140,7 @@ function FetchFilm(_name, _type, _page, _increment) {
             console.log("ERROR!");
             console.error(error);
             let inst = $('[data-remodal-id=modal-error]').remodal();
-            inst.open();
-            document.getElementById('table').innerHTML = ''
+            inst.open(); // opening the modal error window
         });
 
 }
@@ -135,7 +150,6 @@ function getInfo(_id) {
         .then(response => response.json())
         .then(myJson => {
             object = myJson;
-            console.log(myJson)
             document.getElementById(`plot-para`).innerHTML = `${object.Plot}` // modal should have plot
             document.getElementById(`heading`).innerHTML = `${object.Title}` // title
             document.getElementById(`year`).innerHTML = `${object.Year}` //year
@@ -145,9 +159,9 @@ function getInfo(_id) {
 
 }
 let films = JSON.parse(localStorage.films || '[]');
-console.log(films)
 
-function saveId(_id) {
+function saveId(_id, button) {
+    let btn = button
     let present = false;
     let arrayindex = ''
 
@@ -163,13 +177,18 @@ function saveId(_id) {
         films.push({ 'id': `${_id}` })
         localStorage.setItem("films", JSON.stringify(films));
         console.log(localStorage.getItem("films"))
-
+        btn.innerText = 'Remove from favourites'
+        btn.classList.add('btn-red')
+        btn.classList.remove('btn-green')
     }
 
     if (present == true) {
         films.splice(arrayindex, 1)
         localStorage.setItem("films", JSON.stringify(films));
         console.log(localStorage.getItem("films"))
+        btn.innerText = 'Add to favourites';
+        btn.classList.add('btn-green');
+        btn.classList.remove('btn-red');
 
     }
 
@@ -193,6 +212,7 @@ function ClearWrapper() {
 function favouriteListBuild() {
     wrapper.innerHTML = ''
     document.getElementById('fav-list').innerHTML = ''
+    document.getElementById('fav-list').innerText = ''
 
     for (let i = 0; i < films.length; i++) {
         fetch(`https://www.omdbapi.com/?i=${films[i].id}&plot=full&apikey=c19ba406`)
@@ -201,6 +221,7 @@ function favouriteListBuild() {
                 object = myJson;
                 console.log(myJson)
                 let fav_element = document.createElement('div');
+                fav_element.classList.add('fav-element');
                 let fav_title = document.createElement('p')
                 fav_title.innerHTML = `${object.Title}`;
                 let fav_year = document.createElement('p')
@@ -210,9 +231,8 @@ function favouriteListBuild() {
                 fav_img.setAttribute("onerror", 'imgError(this)')
 
                 let fav_btn = document.createElement('a'); // favourite button
-                fav_btn.classList.add("btn-more")
                 fav_btn.classList.add("btn-fav")
-                fav_btn.innerText = "Add to favourites"
+                fav_btn.innerText = "Remove from favourites"
                 fav_btn.addEventListener('click', function () { deleteId(object.imdbID) })
 
                 fav_element.appendChild(fav_img);
@@ -224,13 +244,13 @@ function favouriteListBuild() {
 
                 btn.disabled = true;
                 btnLast.disabled = true;
-
-                if (document.getElementById('fav-list').innerHTML == '') {
-                    document.getElementById('fav-list').innerText = "It is empty here. Add some movies to favourites"
-                }
-
             })
     }
+
+    if (films.length == 0) {
+        document.getElementById('fav-list').innerText = 'It is empty here. Add some movies to favourites'
+    }
+
 }
 
 document.getElementById('fav-call').addEventListener('click', function () {
